@@ -302,8 +302,8 @@ def SID(target, pred):
 
 
 def SID_CPDAG(target, pred):
-    """Compute the Strutural Intervention Distance. The target graph
-    can be a CPDAG. A lower and upper bounds will be returned, they
+    """Compute the Strutural Intervention Distance. The predicted graph
+    must be a CPDAG. A lower and upper bounds will be returned, they
     correspond respectively to the best and worst DAG in the equivalence class
 
     **Required R packages**: SID
@@ -314,7 +314,7 @@ def SID_CPDAG(target, pred):
             networkx.DiGraph. Must be a DAG.
 
         prediction (numpy.ndarray or networkx.DiGraph): Prediction made by the
-            algorithm to evaluate.
+            algorithm to evaluate. Must be a CPDAG.
 
     Returns:
         int: Lower bound of the Structural Intervention Distance.
@@ -333,28 +333,30 @@ def SID_CPDAG(target, pred):
     predictions = retrieve_adjacency_matrix(pred, target.nodes()
                                             if isinstance(target, nx.DiGraph) else None)
 
-    os.makedirs('/tmp/cdt_SID/')
+    base_dir = '{0!s}/cdt_SID_CPDAG{1!s}'.format(gettempdir(), uuid.uuid4())
+    os.makedirs(base_dir)
 
     def retrieve_result():
-        return np.loadtxt('/tmp/cdt_SID/result_lower.csv'), \
-               np.loadtxt('/tmp/cdt_SID/result_upper.csv')
+        return np.loadtxt('{0!s}/result_lower.csv'.format(base_dir), \
+               np.loadtxt('{0!s}/result_upper.csv'.format(base_dir)
 
     try:
-        np.savetxt('/tmp/cdt_SID/target.csv', true_labels, delimiter=',')
-        np.savetxt('/tmp/cdt_SID/pred.csv', predictions, delimiter=',')
+        np.savetxt('{0!s}/target.csv'.format(base_dir), true_labels, delimiter=',')
+        np.savetxt('{0!s}/pred.csv'.format(base_dir), predictions, delimiter=',')
         sid_lower, sid_upper = launch_R_script("{}/utils/R_templates/sid_cpdag.R".format(os.path.dirname(os.path.realpath(__file__))),
-                                    {"{target}": '/tmp/cdt_SID/target.csv',
-                                     "{prediction}": '/tmp/cdt_SID/pred.csv',
-                                     "{result_lower}": '/tmp/cdt_SID/result_lower.csv',
-                                     "{result_upper}": '/tmp/cdt_SID/result_upper.csv'},
+                                    {"{target}": '{0!s}/target.csv'.format(base_dir),
+                                     "{prediction}": '{0!s}/pred.csv'.format(base_dir),
+                                     "{result_lower}": '{0!s}/result_lower.csv'.format(base_dir),
+                                     "{result_upper}": '{0!s}/result_upper.csv'.format(base_dir)},
                                     output_function=retrieve_result)
     # Cleanup
     except Exception as e:
-        rmtree('/tmp/cdt_SID')
+        rmtree(base_dir)
         raise e
     except KeyboardInterrupt:
-        rmtree('/tmp/cdt_SID/')
+        rmtree(base_dir)
         raise KeyboardInterrupt
 
-    rmtree('/tmp/cdt_SID')
+    rmtree(base_dir)
     return sid_lower, sid_upper
+
