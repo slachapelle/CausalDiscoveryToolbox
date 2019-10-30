@@ -337,8 +337,8 @@ def SID_CPDAG(target, pred):
     os.makedirs(base_dir)
 
     def retrieve_result():
-        return np.loadtxt('{0!s}/result_lower.csv'.format(base_dir), \
-               np.loadtxt('{0!s}/result_upper.csv'.format(base_dir)
+        return np.loadtxt('{0!s}/result_lower.csv'.format(base_dir)), \
+               np.loadtxt('{0!s}/result_upper.csv'.format(base_dir))
 
     try:
         np.savetxt('{0!s}/target.csv'.format(base_dir), true_labels, delimiter=',')
