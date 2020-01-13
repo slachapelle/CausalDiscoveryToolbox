@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Developer Documentation &mdash; Causal Discovery Toolbox 0.5.14 documentation</title>
+  <title>Developer Documentation &mdash; Causal Discovery Toolbox 0.5.16 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.5.14
+                0.5.16
               </div>
             
           
@@ -208,11 +208,14 @@ pull request on the <code class="docutils literal notranslate"><span class="pre"
 <ol class="arabic">
 <li><p>Having an up-to-date forked repository of the package and a python 3 installation</p></li>
 <li><p>Clone your forked version of the code locally and install it
-in developer mode:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:YourLogin/CausalDiscoveryToolbox.git
+in developer mode, in a separate python environement
+(e.g. Anaconda environement):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda create --name cdt_dev python=3.6 numpy scipy scikit-learn
+$ source activate cdt_dev
+$ git clone git@github.com:YourLogin/CausalDiscoveryToolbox.git
 $ cd CausalDiscoveryToolbox
 $ git checkout dev
-$ python setup.py install develop --user
+$ python setup.py install develop
 </pre></div>
 </div>
 <p>Where <code class="docutils literal notranslate"><span class="pre">python</span></code> refers to your <cite>python 3</cite> installation.</p>
